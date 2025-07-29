@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Bon de Commande {{ document.numero }}</title>
+    <style>
+      @page {
+        size: A4;
+        margin: 2cm;
+      }
+      body {
+        font-family: Arial, sans-serif;
+        font-size: 12px;
+        line-height: 1.4;
+        color: #333;
+      }
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+        border-bottom: 1px solid #ddd;
+        padding-bottom: 20px;
+      }
+      .logo {
+        max-width: 150px;
+        max-height: 80px;
+      }
+      .document-title {
+        font-size: 20px;
+        font-weight: bold;
+        text-align: right;
+      }
+      .info-section {
+        display: flex;
+        justify-content: space-between;
+        margin: 20px 0;
+      }
+      .info-box {
+        width: 45%;
+      }
+      .info-title {
+        font-weight: bold;
+        margin-bottom: 5px;
+        border-bottom: 1px solid #ddd;
+        padding-bottom: 2px;
+      }
+      .table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+      }
+      .table th,
+      .table td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+      }
+      .table th {
+        background-color: #f5f5f5;
+        font-weight: bold;
+      }
+      .table td.number {
+        text-align: right;
+      }
+      .table td.center {
+        text-align: center;
+      }
+      .totals {
+        margin-top: 20px;
+        text-align: right;
+      }
+      .totals table {
+        width: 300px;
+        margin-left: auto;
+        border-collapse: collapse;
+      }
+      .totals td {
+        border: 1px solid #ddd;
+        padding: 8px;
+      }
+      .totals .label {
+        background-color: #f5f5f5;
+        font-weight: bold;
+      }
+      .signatures {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 60px;
+      }
+      .signature-box {
+        width: 200px;
+        text-align: center;
+      }
+      .signature-line {
+        border-top: 1px solid #333;
+        margin-top: 50px;
+        padding-top: 5px;
+        font-size: 10px;
+      }
+      .footer {
+        margin-top: 30px;
+        text-align: center;
+        font-size: 10px;
+        color: #666;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Header with Logo -->
+    <div class="header">
+      <div>
+        {% if logo_url %}
+        <img src="{{ logo_url }}" alt="Logo" class="logo" />
+        {% else %}
+        <img
+          src="https://cdn.bellat.net/img/LogoFR.png"
+          alt="Logo"
+          class="logo"
+        />
+        {% endif %}
+      </div>
+      <div class="document-title">
+        BON DE COMMANDE<br />
+        <span style="font-size: 14px; font-weight: normal"
+          >N° {{ document.numero }}</span
+        >
+      </div>
+    </div>
+
+    <!-- Company and Client Info -->
+    <div class="info-section">
+      <div class="info-box">
+        <div class="info-title">ACHETEUR</div>
+        <strong>{{ company.raisonSociale }}</strong><br />
+        {{ company.adresse }}<br />
+        Tél: {{ company.telephone }}<br />
+        {% if company.email %}Email: {{ company.email }}<br />{% endif %} NIF:
+        {{ company.nif }} <br />
+        NIS: {{ company.nis }} <br />
+        ART: {{ company.art or '' }} <br />
+        RC: {{ company.rc }}
+      </div>
+
+      <div class="info-box">
+        <div class="info-title">FOURNISSEUR</div>
+        <strong>{{ client.nom }}</strong><br />
+        {{ client.adresse }}<br />
+        {% if client.telephone %}Tél: {{ client.telephone }}<br />{% endif %} 
+        {%if client.nif %}NIF: {{ client.nif }}{% endif %}<br />
+        {% if client.nis %} NIS: {{ client.nis }}{% endif %}<br />
+        {% if client.art %} ART: {{ client.art}}{% endif %}<br />
+        {% if client.rc %} RC: {{ client.rc}}{% endif %}
+      </div>
+    </div>
+
+    <!-- Document Details -->
+    <div style="margin: 20px 0">
+      <strong>Date de commande:</strong> {{ document.date | date }} {% if
+      document.dateLivraison %} |
+      <strong>Date de livraison souhaitée:</strong> {{ document.dateLivraison |
+      date }}{% endif %} {% if document.conditions %} |
+      <strong>Conditions:</strong> {{ document.conditions }}{% endif %}
+    </div>
+
+    <!-- Products Table -->
+    <table class="table">
+      <thead>
+        <tr>
+          <th style="width: 5%">N°</th>
+          <th style="width: 35%">Désignation</th>
+          <th style="width: 10%">Quantité</th>
+          <th style="width: 10%">Unité</th>
+          <th style="width: 12%">Prix Unitaire</th>
+          <th style="width: 8%">TVA %</th>
+          <th style="width: 12%">Total HT</th>
+          <th style="width: 8%">Observation</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for product in products %}
+        <tr>
+          <td class="center">{{ loop.index }}</td>
+          <td>{{ product.designation }}</td>
+          <td class="number">{{ product.quantite | currency }}</td>
+          <td class="center">{{ product.unite }}</td>
+          <td class="number">{{ product.prixUnitaire | currency }}</td>
+          <td class="center">{{ product.tauxTVA or 0 }}%</td>
+          <td class="number">
+            {{ (product.quantite * (product.prixUnitaire or 0)) | currency }}
+          </td>
+          <td style="font-size: 10px">{{ product.observation or '' }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <!-- Totals -->
+    {% if totals %}
+    <div class="totals">
+      <table>
+        <tr>
+          <td class="label">Total HT</td>
+          <td class="number">{{ totals.totalHT }} DA</td>
+        </tr>
+        <tr>
+          <td class="label">Total TVA</td>
+          <td class="number">{{ totals.totalTVA }} DA</td>
+        </tr>
+        <tr style="font-weight: bold">
+          <td class="label">Total TTC</td>
+          <td class="number">{{ totals.totalTTC }} DA</td>
+        </tr>
+      </table>
+      <div style="margin-top: 10px; font-style: italic; font-size: 13px">
+        Arrêté la présente facture à la somme de :
+        <span style="font-weight: bold">{{ total_ttc_words }}</span>
+      </div>
+      <div style="margin-top: 10px; font-size: 13px">
+        <strong>Mode de paiement :</strong>
+        <span
+          >{% if document.modePaiement %}{{ document.modePaiement }}{% else
+          %}Chèque / Espèce / Virement{% endif %}</span
+        >
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Signatures -->
+    <div class="signatures">
+      <div class="signature-box">
+        <div class="signature-line">Cachet et signature</div>
+      </div>
+      <div class="signature-box">
+        <div class="signature-line">Acceptation fournisseur</div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">Document généré le {{ generated_date }}</div>
+  </body>
+</html>

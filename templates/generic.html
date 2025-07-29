@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ document_title }}</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 1cm;
+        }
+        
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            font-size: 12px;
+            line-height: 1.4;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 20px;
+        }
+        
+        .company-info {
+            flex: 1;
+        }
+        
+        .document-info {
+            flex: 1;
+            text-align: right;
+        }
+        
+        .document-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #007bff;
+            margin-bottom: 10px;
+        }
+        
+        .info-section {
+            margin-bottom: 20px;
+        }
+        
+        .info-title {
+            font-weight: bold;
+            font-size: 14px;
+            color: #007bff;
+            margin-bottom: 8px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 2px;
+        }
+        
+        .info-content {
+            padding-left: 10px;
+        }
+        
+        .client-document-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+        }
+        
+        .client-info, .doc-details {
+            flex: 1;
+            margin-right: 20px;
+        }
+        
+        .doc-details {
+            margin-right: 0;
+        }
+        
+        .products-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 11px;
+        }
+        
+        .products-table th,
+        .products-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        
+        .products-table th {
+            background-color: #007bff;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .products-table td.number {
+            text-align: right;
+        }
+        
+        .products-table td.center {
+            text-align: center;
+        }
+        
+        .totals-section {
+            margin-top: 30px;
+            display: flex;
+            justify-content: flex-end;
+        }
+        
+        .totals-table {
+            border-collapse: collapse;
+            width: 300px;
+        }
+        
+        .totals-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+        
+        .totals-table .label {
+            background-color: #f8f9fa;
+            font-weight: bold;
+            width: 60%;
+        }
+        
+        .totals-table .amount {
+            text-align: right;
+            font-weight: bold;
+        }
+        
+        .total-ttc {
+            background-color: #007bff;
+            color: white;
+        }
+        
+        .footer {
+            margin-top: 50px;
+            text-align: center;
+            font-size: 10px;
+            color: #666;
+            border-top: 1px solid #ddd;
+            padding-top: 20px;
+        }
+        
+        .conditions {
+            margin-top: 30px;
+            font-size: 10px;
+            color: #666;
+        }
+        
+        .signature-section {
+            margin-top: 50px;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .signature-box {
+            width: 200px;
+            text-align: center;
+        }
+        
+        .signature-line {
+            border-top: 1px solid #333;
+            margin-top: 60px;
+            padding-top: 5px;
+            font-size: 10px;
+        }
+        
+        .return-reason {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 4px;
+            padding: 10px;
+            margin: 20px 0;
+        }
+        
+        .return-reason strong {
+            color: #856404;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <div class="header">
+        <div class="company-info">
+            <div class="info-title">ENTREPRISE</div>
+            <div class="info-content">
+                <strong>{{ company.raisonSociale }}</strong><br>
+                {{ company.adresse }}<br>
+                Tél: {{ company.telephone }}<br>
+                {% if company.email %}Email: {{ company.email }}<br>{% endif %}
+                NIF: {{ company.nif }}<br>
+                NIS: {{ company.nis }}<br>
+                ART: {{ company.art or '' }}<br>
+                RC: {{ company.rc }}
+            </div>
+        </div>
+        
+        <div class="document-info">
+            <div class="document-title">{{ document_title }}</div>
+            <div><strong>N°:</strong> {{ document.numero }}</div>
+            <div><strong>Date:</strong> {{ document.date | date }}</div>
+            {% if document.bonCommande %}
+            <div><strong>Bon de commande:</strong> {{ document.bonCommande }}</div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Client and Document Details -->
+    <div class="client-document-info">
+        <div class="client-info">
+            <div class="info-title">CLIENT</div>
+            <div class="info-content">
+                <strong>{{ client.nom }}</strong><br>
+                {{ client.adresse }}<br>
+                {% if client.telephone %}Tél: {{ client.telephone }}<br>{% endif %}
+                       {%if client.nif %}NIF: {{ client.nif }}{% endif %}<br />
+        {% if client.nis %} NIS: {{ client.nis }}{% endif %}<br />
+        {% if client.art %} ART: {{ client.art}}{% endif %}<br />
+        {% if client.rc %} RC: {{ client.rc}}{% endif %}
+            </div>
+        </div>
+        
+        <div class="doc-details">
+            <div class="info-title">DÉTAILS DU DOCUMENT</div>
+            <div class="info-content">
+                {% if document.dateLivraison %}
+                <div><strong>Date de livraison:</strong> {{ document.dateLivraison | date }}</div>
+                {% endif %}
+                {% if document.dateEcheance %}
+                <div><strong>Date d'échéance:</strong> {{ document.dateEcheance | date }}</div>
+                {% endif %}
+                {% if document.conditions %}
+                <div><strong>Conditions:</strong> {{ document.conditions }}</div>
+                {% endif %}
+                {% if document.modePaiement %}
+                <div><strong>Mode de paiement:</strong> {{ document.modePaiement }}</div>
+                {% endif %}
+                {% if document.facture %}
+                <div><strong>Facture:</strong> {{ document.facture }}</div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- Return Reason (for bon-retour) -->
+    {% if type == 'bon-retour' and document.motifGeneral %}
+    <div class="return-reason">
+        <strong>Motif de retour:</strong> {{ document.motifGeneral }}
+    </div>
+    {% endif %}
+    
+    <!-- Products Table -->
+    <table class="products-table">
+        <thead>
+            <tr>
+                <th style="width: 5%;">N°</th>
+                <th style="width: 35%;">Désignation</th>
+                <th style="width: 10%;">Qté</th>
+                <th style="width: 10%;">Unité</th>
+                {% if type in ['facture', 'proforma'] %}
+                <th style="width: 12%;">P.U. HT</th>
+                <th style="width: 8%;">TVA %</th>
+                <th style="width: 12%;">Total HT</th>
+                {% endif %}
+                {% if type == 'bon-retour' %}
+                <th style="width: 20%;">Motif de retour</th>
+                {% else %}
+                <th style="width: 20%;">Observation</th>
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in products %}
+            <tr>
+                <td class="center">{{ loop.index }}</td>
+                <td>{{ product.designation }}</td>
+                <td class="number">{{ product.quantite | currency }}</td>
+                <td class="center">{{ product.unite }}</td>
+                {% if type in ['facture', 'proforma'] %}
+                <td class="number">{{ product.prixUnitaire | currency }}</td>
+                <td class="center">{{ product.tauxTVA or 0 }}%</td>
+                <td class="number">{{ (product.quantite * (product.prixUnitaire or 0)) | currency }}</td>
+                {% endif %}
+                <td>
+                    {% if type == 'bon-retour' %}
+                        {{ product.motifRetour or '' }}
+                    {% else %}
+                        {{ product.observation or '' }}
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    <!-- Totals Section (for facture and proforma) -->
+    {% if totals and type in ['facture', 'proforma'] %}
+    <div class="totals-section">
+        <table class="totals-table">
+            <tr>
+                <td class="label">Total HT</td>
+                <td class="amount">{{ totals.totalHT }} DA</td>
+            </tr>
+            <tr>
+                <td class="label">Total TVA</td>
+                <td class="amount">{{ totals.totalTVA }} DA</td>
+            </tr>
+            <tr class="total-ttc">
+                <td class="label">Total TTC</td>
+                <td class="amount">{{ totals.totalTTC }} DA</td>
+            </tr>
+        </table>
+        <div style="margin-top:10px; font-style:italic; font-size:13px;">
+            Arrêté la présente facture à la somme de : <span style="font-weight:bold">{{ total_ttc_words }}</span>
+        </div>
+        <div style="margin-top:10px; font-size:13px;">
+            <strong>Mode de paiement :</strong>
+            <span>{% if document.modePaiement %}{{ document.modePaiement }}{% else %}Chèque / Espèce / Virement{% endif %}</span>
+        </div>
+    </div>
+    {% endif %}
+    
+    <!-- Conditions -->
+    {% if document.conditions %}
+    <div class="conditions">
+        <strong>Conditions:</strong> {{ document.conditions }}
+    </div>
+    {% endif %}
+    
+    <!-- Signature Section -->
+    <div class="signature-section">
+        <div class="signature-box">
+            <div class="signature-line">Signature du client</div>
+        </div>
+        <div class="signature-box">
+            <div class="signature-line">Cachet et signature</div>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <div class="footer">
+        Document généré le {{ generated_date }}<br>
+        {{ company.raisonSociale }} - {{ company.adresse }}
+    </div>
+</body>
+</html>
