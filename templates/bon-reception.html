@@ -1,3 +1,24 @@
+    {% if totals %}
+    <div class="totals">
+        <table>
+            <tr>
+                <td class="label">Total HT</td>
+                <td class="number">{{ totals.totalHT }} DA</td>
+            </tr>
+            <tr>
+                <td class="label">Total TVA</td>
+                <td class="number">{{ totals.totalTVA }} DA</td>
+            </tr>
+            <tr style="font-weight: bold;">
+                <td class="label">Total TTC</td>
+                <td class="number">{{ totals.totalTTC }} DA</td>
+            </tr>
+        </table>
+        <div style="margin-top:10px; font-style:italic; font-size:13px;">
+            Arrêté le présent bon de réception à la somme de : <span style="font-weight:bold">{{ total_ttc_words }}</span>
+        </div>
+    </div>
+    {% endif %}
 <!DOCTYPE html>
 <html lang="fr">
   <head>

@@ -1,3 +1,10 @@
+    {% if total_versement %}
+    <div class="totals">
+        <div style="margin-top:10px; font-style:italic; font-size:13px;">
+            Arrêté le présent bon de versement à la somme de : <span style="font-weight:bold">{{ total_versement | currency }} DA</span>
+        </div>
+    </div>
+    {% endif %}
 <!DOCTYPE html>
 <html lang="fr">
 <head>
