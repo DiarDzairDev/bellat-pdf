@@ -82,13 +82,14 @@
         <thead>
             <tr>
                 <th style="width: 5%;">N°</th>
-                <th style="width: 35%;">Désignation</th>
-                <th style="width: 10%;">Quantité</th>
-                <th style="width: 10%;">Unité</th>
-                <th style="width: 12%;">Prix Unitaire</th>
-                <th style="width: 8%;">TVA %</th>
-                <th style="width: 12%;">Total HT</th>
-                <th style="width: 8%;">Observation</th>
+                <th style="width: 25%">Désignation</th>
+                <th style="width: 10%">Quantité</th>
+                <th style="width: 10%">Unité</th>
+                <th style="width: 12%">Prix Unitaire HT</th>
+                <th style="width: 8%">TVA %</th>
+                <th style="width: 12%">Prix Unitaire TTC</th>
+                <th style="width: 12%">Total HT</th>
+                <th style="width: 8%">Observation</th>
             </tr>
         </thead>
         <tbody>
@@ -100,6 +101,7 @@
                 <td class="center">{{ product.unite }}</td>
                 <td class="number">{{ product.prixUnitaire | currency }}</td>
                 <td class="center">{{ product.tauxTVA or 0 }}%</td>
+                <td class="number">{{ (product.prixUnitaire * (1 + (product.tauxTVA or 0) / 100)) | currency if product.prixUnitaire is not none else '' }}</td>
                 <td class="number">{{ (product.quantite * (product.prixUnitaire or 0)) | currency }}</td>
                 <td style="font-size: 10px;">{{ product.observation or '' }}</td>
             </tr>
